@@ -17,46 +17,40 @@ object Application extends Controller {
     Ok(views.html.index(null))
   }
 
+  def customerAccounts = Action {
+    println("Request received: customerAccounts ")
+    val customerAccounts = DataAccessObj.getAllCustomerAccounts()
+    if(!customerAccounts.isEmpty) Ok(Json.toJson(customerAccounts)) else NotFound
+  }
+
   def customers = Action {
-    println("Request received: transactions ")
+    println("Request received: customers ")
     val customers = DataAccessObj.getAllCustomers()
     if(!customers.isEmpty) Ok(Json.toJson(customers)) else NotFound
   }
 
-  def transactionByAccount(accountId : String) = Action {
-    println("Request received: transactionByAccount " + accountId)
-    if (null != accountId) {
-      val transactions = DataAccessObj.getTransactionsForAccount(accountId)
-      Ok(Json.toJson(transactions))
-    }
-    else {
-      NotFound
-    }
-  }
-
-  def allAccounts() = Action {
-    println("Request received: allAccounts ")
-    val accounts = DataAccessObj.getAllAccounts()
+  def accountsForCustomer(customerId: String) = Action {
+    println("Request received: accountsForCustomer ")
+    val accounts = DataAccessObj.getAllAccountsForCustomer(customerId)
     if(!accounts.isEmpty) Ok(Json.toJson(accounts)) else NotFound
   }
 
-
-  def transactionById(transactionId : String) = Action {
-    println("Request received: transactionById " + transactionId)
-    if (null != transactionId) {
-      val transaction = DataAccessObj.getTransactionsForId(transactionId)
-      if (null != transaction) Ok(Json.toJson(transaction)) else NotFound
-    }
-    else {
-      NotFound
-    }
+  def customer(customerId: String) = Action {
+    println("Request received: customer ")
+    val customer = DataAccessObj.getCustomer(customerId)
+    if(null != customer) Ok(Json.toJson(customer)) else NotFound
   }
 
-  def createNew = Action { request =>
-    println("Request to create object received + " + request.body.asText)
+  def createNewCustomerAccount = Action { request =>
+    println("Request to create createNewCustomerAccount received + " + request.body.asText)
     val json = request.body.asJson.get
-    println("Request body " + json)
-    if (DataAccessObj.insertTransactionJson(json)) Ok else BadRequest
+    if (DataAccessObj.insertCustomerAccountJson(json)) Ok else BadRequest
+  }
+
+  def createNewCustomer = Action { request =>
+    println("Request to create createNewCustomer received + " + request.body.asText)
+    val json = request.body.asJson.get
+    if (DataAccessObj.insertCustomerJson(json)) Ok else BadRequest
   }
 
 }

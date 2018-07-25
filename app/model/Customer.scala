@@ -13,7 +13,10 @@ case class Customer(customerId : String,
                     surname : String,
                     accounts: List[String])
 
-
+case class CustomerAccount(customerId : String,
+                          forename : String,
+                          surname : String,
+                          account: String)
 
 object Customer {
   implicit val customerReads: Reads[Customer] = (
@@ -31,6 +34,25 @@ object Customer {
       (JsPath \ "accounts").write[List[String]]
     )(unlift(Customer.unapply))
 }
+
+
+object CustomerAccount {
+  implicit val customerReads: Reads[CustomerAccount] = (
+    (JsPath \ "customerId").read[String] and
+      (JsPath \ "forename").read[String] and
+      (JsPath \ "surname").read[String] and
+      (JsPath \ "account").read[String]
+    )(CustomerAccount.apply _)
+
+  implicit val customerWrites: Writes[CustomerAccount] = (
+
+    (JsPath \ "customerId").write[String] and
+      (JsPath \ "forename").write[String]and
+      (JsPath \ "surname").write[String] and
+      (JsPath \ "account").write[String]
+    )(unlift(CustomerAccount.unapply))
+}
+
 
 
 

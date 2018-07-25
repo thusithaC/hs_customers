@@ -3,10 +3,13 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
-GET     /customers/all               controllers.Application.customers
-
-
+GET     /                       controllers.Application.index
+GET     /customers/allEntries   controllers.Application.customerAccounts
+GET     /customers/all          controllers.Application.customers
+GET     /customers/accounts          controllers.Application.accountsForCustomer(customerId)
+GET     /customers/id          controllers.Application.customer(customerId)
+POST    /customers/createNewCustomerAccount     controllers.Application.createNewCustomerAccount
+POST    /customers/createNewCustomer    controllers.Application.createNewCustomer
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
