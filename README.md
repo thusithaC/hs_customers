@@ -1,8 +1,6 @@
-# transactions rest api
+# Customers rest api
 
 Based on https://github.com/heroku/scala-getting-started.git
-
-.
 
 ## Running Locally
 
@@ -22,3 +20,8 @@ $ heroku create
 $ git push heroku master
 $ heroku open
 ```
+
+## Setting up a database
+
+A MySql database should be set up.
+It could be hosted locally or in Heroku or any other cloud provider. The application.conf file should be updated based on the connection string and the username/password

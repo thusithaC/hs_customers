@@ -2,6 +2,7 @@ package model
 
 import java.sql.{ResultSet, SQLException}
 
+import play.api.Logger
 import play.api.db._
 import play.api.libs.json._
 import play.api.Play.current
@@ -14,8 +15,6 @@ import scala.annotation.tailrec
 object DataAccessObj {
 
   val dbname = "customers"
-
-
 
   def getAllCustomerAccounts(): List[CustomerAccount] = {
     val query = "SELECT customerId, forename, surname, accountId FROM customer_info"
@@ -66,58 +65,22 @@ object DataAccessObj {
     }
   }
 
-  /*
-  def getTransactionsForAccount(account: String) : List[CustomerAccount] = {
-    val query = s"SELECT transactionId, accountId, transactionDay, category, transactionAmount FROM customer_info WHERE accountId=\'${account}\'"
-    getItemsFromDatsource(query)
-  }
-
-
-  def getTransactionsForId(transactionId: String) : CustomerAccount = {
-    val query = s"SELECT transactionId, accountId, transactionDay, category, transactionAmount FROM customer_info WHERE transactionId=\'$transactionId\'"
-    getItemFromDatsource(query)
-  }
-
-  def getTransactionsForAccountDateRange(account: String, startDate:Int, endDate:Int) : List[CustomerAccount] = {
-    val query = s"SELECT transactionId, accountId, transactionDay, category, transactionAmount FROM customer_info WHERE accountId=\'${account}\' AND  transactionDay BETWEEN ${startDate} AND ${endDate}"
-    getItemsFromDatsource(query)
-  }
-
-  def getAllAccounts() : List[String] = {
-
-    def getaccountsFromResult(accList:List[String], rs: ResultSet) : List[String] = {
-      val hasNext = rs.next()
-      if (!hasNext) accList else getaccountsFromResult(rs.getString("accountId")::accList, rs)
-    }
-
-    val query = "SELECT distinct accountId FROM customer_info ORDER BY accountId"
-
-    val conn = DB.getConnection(dbname)
-    try {
-      val stmt = conn.createStatement
-      val rs = stmt.executeQuery(query)
-      getaccountsFromResult(Nil, rs)
-    } finally {
-      conn.close()
-    }
-  }
-*/
   def insertCustomerAccountJson(json:JsValue) : Boolean= {
     json.validate[CustomerAccount] match {
       case c: JsSuccess[CustomerAccount] => {
         val customerAccount: CustomerAccount = c.get
         val rowsAffected = insertCustomerAccountIntoDb(customerAccount)
         if (rowsAffected > 0){
-          println("successfully entered transaction " + customerAccount )
+          Logger.info("successfully entered transaction " + customerAccount )
           true
         }
         else {
-          println("Database Error couldnt enter transaction " + customerAccount)
+          Logger.error("Database Error couldnt enter transaction " + customerAccount)
           false
         }
       }
       case e: JsError => {
-        println("Error parsing transaction " +  json)
+        Logger.error("Error parsing transaction " +  json)
         false
       }
     }
@@ -128,7 +91,7 @@ object DataAccessObj {
     try {
       val stmt = conn.createStatement
       val insertString = s"INSERT INTO customer_info (customerId, forename, surname, accountId) VALUES (\'${customerAccount.customerId}\', \'${customerAccount.forename}\', \'${customerAccount.surname}\', \'${customerAccount.account}\')"
-      println(insertString)
+      Logger.info(insertString)
       stmt.executeUpdate(insertString)
     } finally {
       conn.close()
@@ -147,16 +110,16 @@ object DataAccessObj {
 
         val rowsAffected = insertCustomerAccountsIntoDb(customerAccounts)
         if (rowsAffected > 0){
-          println("successfully entered transaction " + customer )
+          Logger.info("successfully entered transaction " + customer )
           true
         }
         else {
-          println("Database Error couldnt enter transaction " + customer)
+          Logger.error("Database Error couldnt enter transaction " + customer)
           false
         }
       }
       case e: JsError => {
-        println("Error parsing transaction " +  json)
+        Logger.error("Error parsing transaction " +  json)
         false
       }
     }
@@ -222,12 +185,4 @@ object DataAccessObj {
       conn.close()
     }
   }
-
-
-
-
-
-
-
-
 }

@@ -18,39 +18,63 @@ object Application extends Controller {
   }
 
   def customerAccounts = Action {
-    println("Request received: customerAccounts ")
+    Logger.info("Request received: customerAccounts ")
     val customerAccounts = DataAccessObj.getAllCustomerAccounts()
-    if(!customerAccounts.isEmpty) Ok(Json.toJson(customerAccounts)) else NotFound
+    if(!customerAccounts.isEmpty) Ok(Json.toJson(customerAccounts))
+    else {
+      Logger.error("Error processing request : customerAccounts")
+      NotFound
+    }
   }
 
   def customers = Action {
-    println("Request received: customers ")
+    Logger.info("Request received: customers ")
     val customers = DataAccessObj.getAllCustomers()
-    if(!customers.isEmpty) Ok(Json.toJson(customers)) else NotFound
+    if(!customers.isEmpty) Ok(Json.toJson(customers))
+    else {
+      Logger.error("Error processing request : customers")
+      NotFound
+    }
   }
 
   def accountsForCustomer(customerId: String) = Action {
-    println("Request received: accountsForCustomer ")
+    Logger.info("Request received: accountsForCustomer ")
     val accounts = DataAccessObj.getAllAccountsForCustomer(customerId)
-    if(!accounts.isEmpty) Ok(Json.toJson(accounts)) else NotFound
+    if(!accounts.isEmpty) Ok(Json.toJson(accounts))
+    else {
+      Logger.error("Error processing request : accountsForCustomer")
+      NotFound
+    }
   }
 
   def customer(customerId: String) = Action {
-    println("Request received: customer ")
+    Logger.info("Request received: customerById ")
     val customer = DataAccessObj.getCustomer(customerId)
-    if(null != customer) Ok(Json.toJson(customer)) else NotFound
+    if(null != customer) Ok(Json.toJson(customer))
+    else {
+      Logger.error("Error processing request : customerById")
+      NotFound
+    }
   }
 
   def createNewCustomerAccount = Action { request =>
-    println("Request to create createNewCustomerAccount received + " + request.body.asText)
+    Logger.info("Request to create createNewCustomerAccount received + " + request.body.asText)
     val json = request.body.asJson.get
-    if (DataAccessObj.insertCustomerAccountJson(json)) Ok else BadRequest
+    if (DataAccessObj.insertCustomerAccountJson(json)) Ok
+    else {
+      Logger.error("Error processing request : createNewCustomerAccount")
+      BadRequest
+    }
   }
 
   def createNewCustomer = Action { request =>
-    println("Request to create createNewCustomer received + " + request.body.asText)
+    Logger.info("Request to create createNewCustomer received + " + request.body.asText)
     val json = request.body.asJson.get
-    if (DataAccessObj.insertCustomerJson(json)) Ok else BadRequest
+    if (DataAccessObj.insertCustomerJson(json)) Ok
+    else {
+      Logger.error("Error processing request : createNewCustomer")
+      BadRequest
+    }
   }
 
 }
