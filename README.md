@@ -25,3 +25,4 @@ $ heroku open
 
 A MySql database should be set up.
 It could be hosted locally or in Heroku or any other cloud provider. The application.conf file should be updated based on the connection string and the username/password
+Database schema is in scripts/db_schema.txt file as an insert table SQL statement.

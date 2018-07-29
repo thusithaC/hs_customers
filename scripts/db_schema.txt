@@ -1,0 +1,10 @@
+
+CREATE TABLE customer_info (
+customerId VARCHAR(10) NOT NULL,
+forename VARCHAR(30) NOT NULL,
+surname VARCHAR(30) NOT NULL,
+accountId VARCHAR(10) NOT NULL,
+PRIMARY KEY (customerId, accountId)
+)
+
+ALTER TABLE customer_info ADD CONSTRAINT accountConstraint UNIQUE (accountId)
